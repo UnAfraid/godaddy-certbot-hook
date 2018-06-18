@@ -12,8 +12,6 @@ It is a task that could fail at any time, so it's suggested to confirm after run
 Copy .env-dist as .env and fill the required data inside
 
 # Issue an actual and valid certificate for your domain:
-(if you want to test-run before the real action, read the next paragraph below)
-
 To create a valid certificate, you need to run the following command:
 
 Clone the repository if you haven't already
@@ -31,5 +29,10 @@ nano .env
 
 Now issue a wildcard certificate
 ```sh
-./certbot-dns.sh *.yourdomain.com
+./certbot-dns.sh certonly *.yourdomain.com
+```
+
+If you wish to renew a certificate
+```sh
+./certbot-dns.sh renew *.yourdomain.com
 ```

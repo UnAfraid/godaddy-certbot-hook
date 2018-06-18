@@ -1,5 +1,6 @@
 #!/bin/bash
-DOMAIN="${1}"
+ACTION="${1}"
+DOMAIN="${2}"
 SCRIPT_FILE=$(readlink -f "${0}")
 SCRIPT_DIR=$(dirname "${SCRIPT_FILE}")
 ENV_FILE="${SCRIPT_DIR}/.env"
@@ -21,6 +22,17 @@ fi
 
 source "${ENV_FILE}"
 
+case "${ACTION}" in
+    "certonly")
+    "renew"
+        ;;
+    *)
+	    echo "Unsupported action: ${ACTION}, certonly or renew are only supported!"
+        return
+        ;; 
+esac
+
+
 echo "Requesting certificate for ${DOMAIN}.."
 if [ -z "${DOMAIN}" ]; then
     echo "Usage ./${0} example.domain.com"
@@ -40,4 +52,4 @@ if [ -z "${ACME_SERVER}" ]; then
     exit 1
 fi
 
-certbot certonly --agree-tos --manual --preferred-challenge=dns --manual-auth-hook="${HOOK_SCRIPT}" --email "${EMAIL_ADDRESS}" --manual-public-ip-logging-ok -d "${DOMAIN}" --server "${ACME_SERVER}"
+certbot "${ACTION}" --agree-tos --manual --preferred-challenge=dns --manual-auth-hook="${HOOK_SCRIPT}" --email "${EMAIL_ADDRESS}" --manual-public-ip-logging-ok -d "${DOMAIN}" --server "${ACME_SERVER}"
